@@ -1,7 +1,7 @@
 #! /bin/bash
 
-ERROR_PATH="$PWD/error"
-ERROR_MSG="Error! Something went wrong"
+ERROR_PATH="$HOME/lab1_err"
+ERROR_MSG="Something went wrong. Check your input."
 
 while true
 do
