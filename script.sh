@@ -34,10 +34,10 @@ do
 
 		4)
 		echo 'Введите путь к файлу, для которого нужно создать ссылку:'
-		read file_name
+		read name
 		echo 'Введите имя ссылки:'
 		read link_name
-		ln -s "$file_name" "$link_name" 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>&2
+		ln -s "$name" "$link_name" 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>&2
 		;;
 	
 		5)
