@@ -1,0 +1,19 @@
+#! /bin/bash
+if [[($1 = "")]]
+then
+	echo "enter dir";
+fi
+# echo $1;
+# files=`ls -la $1 | grep "^p"`;
+files=`ls -la $1 | grep "^-" | awk '{print $9}' `;
+#  fuser  returns a non-zero return code if none of the specified files is accessed or in case of a fatal error.  If at least one access has  been found, fuser returns zero.
+
+for file in $files
+do
+	is_used=`fuser $file`;
+	if [[($is_used = 0)]]
+	then
+		res=`grep "f" $is_used`; # it doesn't work, fuser says only process pid, look in bookmarks in chrome
+		if [[(res != "")]];
+	fi
+done
