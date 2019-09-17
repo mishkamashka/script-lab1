@@ -1,0 +1,7 @@
+#! /bin/bash
+echo "Users who are not able to login";
+users=`getent passwd | grep "[nologin|false]$" | cut -d : -f 1`; 
+for user in $users
+do
+	echo $user;
+done
