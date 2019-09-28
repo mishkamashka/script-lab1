@@ -1,0 +1,60 @@
+#! /bin/bash
+
+ERROR_PATH="$HOME/Desktop/log"
+
+list_files_for_user() {
+	user=$1;
+	usergroups=`groups $user 2>$ERROR_PATH`;
+
+	if !(id "$user" >2 2>/dev/null) ;
+	then
+        	echo "user $user does not exist"
+	fi
+
+
+	
+# need to get all groups and name. Check for every file if it has permisssions for all, group, user
+}
+
+
+list_r_users() {
+        dir=$1;
+        if [[(! -d "$dir")]] # -d is a operator to test if the given directory exists or not. "File test operators" -> google
+                then
+                        echo "$dir is not a directory"
+                else
+                        rights=`ls -l | grep $dir | awk '{print $1}'`;
+                        owner=`ls -l | grep $dir | awk '{print $3}'`;
+                        group=`ls -l | grep $dir | awk '{print $4}'`;  
+                        if [[(${rights:1:1} = r)]]
+                        then
+                                echo $owner;
+                        fi
+                        if [[(${rights:4:1} = r)]]
+                        then
+                                for user in `getent passwd`
+                                do
+                                        username=`echo $user | awk -F: '{print $1}'`
+                                        usergroup=`groups $username 2>$ERROR_PATH | grep -w $group`
+                                        if [[ -n $usergroup && -z `echo $username | grep -w $owner` ]]
+                                        then
+                                                echo $username
+                                        fi
+                                done
+                        fi
+                        if [[(${rights:7:1} = r)]]
+                        then
+                                for user in `getent passwd | tr ' ' '_'`
+                                do
+                                        username=`echo $user | awk -F: '{print $1}'`
+                                        usergroup=`groups $username | grep -w $group`
+                                        if [[ -z $usergroup && -z `echo $username | grep -w $owner` ]]
+                                        then
+                                                echo $username
+                                        fi
+                                done
+                        fi
+        fi
+        return;
+}
+
