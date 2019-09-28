@@ -3,17 +3,27 @@ if [[($1 = "")]]
 then
 	echo "enter dir";
 fi
-# echo $1;
 # files=`ls -la $1 | grep "^p"`;
 files=`ls -la $1 | grep "^-" | awk '{print $9}' `;
 #  fuser  returns a non-zero return code if none of the specified files is accessed or in case of a fatal error.  If at least one access has  been found, fuser returns zero.
 
+echo "" > tmp;
 for file in $files
 do
-	is_used=`fuser $file`;
-	if [[($is_used = 0)]]
+	if [[(${1: -1} = "/")]]
 	then
-		res=`grep "f" $is_used`; # it doesn't work, fuser says only process pid, look in bookmarks in chrome
-		if [[(res != "")]];
+		filename="$1$file";
+	else
+		filename="$1/$file"
+	fi
+	echo $filename;
+	is_used=`fuser -v $filename 2>tmp`;
+	if [[($is_used != 0)]] # doesn't work
+	then	
+		res=`cat tmp | grep "  F"`;
+		if [[($? = 0)]]
+		then
+			echo $file;
+		fi
 	fi
 done
