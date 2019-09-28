@@ -16,8 +16,8 @@ do
 	else
 		filename="$1/$file"
 	fi
-	echo $filename;
-	is_used=`fuser -v $filename 2>tmp`;
+	# echo $filename;
+	is_user=`fuser -v $filename 2>tmp`;
 	if [[($is_used != 0)]] # doesn't work
 	then	
 		res=`cat tmp | grep "  F"`;
