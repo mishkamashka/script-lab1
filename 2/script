@@ -3,9 +3,10 @@
 ERROR_PATH="$HOME/lab1_err"
 ERROR_MSG="Something went wrong. Check your input."
 
+# lists all users who have read access to a directory
 list_r_users() {
-	dir=$1;
-        if [[(! -d "$dir")]]
+        dir=$1;
+        if [[(! -d "$dir")]] # -d is a operator to test if the given directory exists or not. "File test operators" -> google
                 then
                         echo "$dir is not a directory"
                 else
@@ -44,12 +45,13 @@ list_r_users() {
         return;
 }
 
+# lists all users who have write access to a directory
 list_w_users() {
-	dir=$1;
+        dir=$1; 
         if [[(! -d "$dir")]]
-                then
+                then    
                         echo "$dir is not a directory">$2
-                else
+                else    
                         rights=`ls -l | grep $dir | awk '{print $1}'`;
                         owner=`ls -l | grep $dir | awk '{print $3}'`;
                         group=`ls -l | grep $dir | awk '{print $4}'`;  
@@ -61,7 +63,7 @@ list_w_users() {
                         then
                                 for user in `getent passwd`
                                 do
-                                        username=`echo $user | awk -F: '{print $1}'`
+                                        username=`echo $user | awk -F: '{print $1}'` 
                                         usergroup=`groups $username 2>>$ERROR_PATH | grep -w $group`
                                         if [[ -n $usergroup && -z `echo $username | grep -w $owner` ]]
                                         then
@@ -73,7 +75,7 @@ list_w_users() {
                         then
                                 for user in `getent passwd | tr ' ' '_'`
                                 do
-                                        username=`echo $user | awk -F: '{print $1}'`
+                                        username=`echo $user | awk -F: '{print $1}'` 
                                         usergroup=`groups $username 2>>$ERROR_PATH | grep -w $group`
                                         if [[ -z $usergroup && -z `echo $username | grep -w $owner` ]]
                                         then
@@ -84,66 +86,4 @@ list_w_users() {
         fi
         return;
 }
-
-while true
-do
-	echo -e	"Вариант #11 \n\t1) Напечатать имя текущего каталога."
-	echo -e	"\t2) Сменить текущий каталог"
-	echo -e	"\t3) Напечатать содержимое текущего каталога"
-	echo -e	"\t4) Создать символьную ссылку на файл"
-	echo -e	"\t5) Выполнить введенную команду"
-	echo -e	"\t6) Выйти из программы"
-	echo -e	"\t7) Вывести пользователей с правами на чтение и запсись для каталогу"
-	echo -e	"Введите номер действия:"
-	read number
-	echo
-
-	case "$number" in
-		1)
-		echo -n "Текущий каталог: "
-		pwd 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>$2
-		;;
-		
-		2)
-		echo 'Введите путь к нужному каталогу:'
-		read path
-		cd "$path" 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>$2
-		;;
-
-		3)
-		echo "Содержимое текущего каталога:"
-		ls 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>$2
-		;;
-
-		4)
-		echo 'Введите путь к файлу, для которого нужно создать ссылку:'
-		read name
-		echo 'Введите имя ссылки:'
-		read link_name
-		ln -s "$name" "$link_name" 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>&2
-		;;
-	
-		5)
-		echo 'Введите команду:'
-		read command_name
-		eval $command_name
-		#echo $($command_name 2>>"$ERROR_PATH" || echo $ERROR_MSG 1>&2)
-		;;
-
-		6)
-		exit 0
-		;;
-
-		7)
-		echo 'Введите имя каталога:'
-		read dir
-		echo -e "\nПользователи, которые имеют права на чтение:"
-		list_r_users $dir
-		echo -e "\nПользователи, которые имеют права на запись:"
-		list_w_users $dir
-		;;
-	esac
-	echo
-
-done
 
