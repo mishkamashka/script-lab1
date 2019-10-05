@@ -1,6 +1,6 @@
 #! /bin/bash
 echo "Users who are not able to login";
-users=`getent passwd | grep "[nologin|false]$" | cut -d : -f 1`; 
+users=`getent passwd | grep "[nologin|false]$" | cut -d : -f 1 | sort`; 
 for user in $users
 do
 	echo $user;

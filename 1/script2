@@ -4,7 +4,7 @@ then
 	echo "enter dir";
 fi
 # files=`ls -la $1 | grep "^p"`;
-files=`ls -la $1 | grep "^-" | awk '{print $9}' `;
+files=`ls -la $1 | grep "^-" | awk '{print $9}' | sort `;
 #  fuser  returns a non-zero return code if none of the specified files is accessed or in case of a fatal error.  If at least one access has  been found, fuser returns zero.
 
 echo "" > tmp;
@@ -18,7 +18,7 @@ do
 	fi
 	# echo $filename;
 	is_user=`fuser -v $filename 2>tmp`;
-	if [[($is_used != 0)]] # doesn't work
+	if [[($is_used != 0)]]
 	then	
 		res=`cat tmp | grep "  F"`;
 		if [[($? = 0)]]

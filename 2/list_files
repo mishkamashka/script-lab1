@@ -11,7 +11,7 @@ list_files_for_user() {
         	echo "user $user does not exist"
 	fi
 
-
+	files=``;
 	
 # need to get all groups and name. Check for every file if it has permisssions for all, group, user
 }
